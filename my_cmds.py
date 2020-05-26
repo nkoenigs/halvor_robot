@@ -38,6 +38,13 @@ class Main_Commands(commands.Cog):
     async def wet_wet_mud(self, ctx):
         await self.play_audio_clip(ctx, 'audio/wetwetmud.mp3')
 
+    # play issacs im a little fat girl
+    @commands.command(name = 'shame', help = 'play ignohrs classic line')
+    async def wet_wet_mud(self, ctx):
+        for role in ctx.author.guild.roles:
+            if(role.id == 714980503282778133):
+                await self.play_audio_clip(ctx, 'audio/imalittlefatgirl.mp3')
+
     # updates halvor to the newest version
     @commands.command(name = 'update', help = 'restarts me with the newest github pull')
     async def self_update(self, ctx):
