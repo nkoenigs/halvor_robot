@@ -1,4 +1,3 @@
-
 import os
 import discord
 from discord.ext import commands
@@ -17,5 +16,10 @@ class Main_Commands(commands.Cog):
     # play the wet wet mud clip in call
     @commands.command(name = 'bae', help = 'play a relatable clip from i think you should leave')
     async def wet_wet_mud(self, ctx):
-        ctx.author
-        vc = await self.join_voice_channel()
+        try:
+            tar = ctx.author.voice.channel
+        except:
+            await ctx.send(f'{ctx.author}, you need to be in a voice channel for me to play a clip')
+        else:
+            vc = await tar.connect()
+            vc.play(discord.FFmpegPCMAudio('audio/wetwetmud.mp3'))

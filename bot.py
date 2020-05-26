@@ -4,7 +4,8 @@
 # discord bot for many things
 
 # dependencies:
-# $ pip install -U discord.py
+# $ pip install discord.py
+# $ pip install PyNaCl
 
 import os
 import discord
