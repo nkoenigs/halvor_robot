@@ -25,6 +25,6 @@ class Main_Commands(commands.Cog):
             vc = await tar.connect()
             vc.play(discord.FFmpegPCMAudio('C:/Users/NDK2018/Documents/GitHub/halvor_robot/audio/wetwetmud.mp3'))
             while vc.is_playing():
-                await asyncio.sleep(10)
+                await asyncio.sleep(.1)
             vc.stop()
             await vc.disconnect()
