@@ -9,6 +9,25 @@ class Main_Commands(commands.Cog):
         self.bot = bot
         self._last_member = None
 
+    #plays a given audio clip in the call of ctx's sender
+    async def play_audio_clip(self, ctx, clip):
+        try:
+            tar = ctx.author.voice.channel
+        except:
+            await ctx.send(f'{ctx.author}, you need to be in a voice channel for me to play a clip')
+        else:
+            vc = await tar.connect()
+            try:
+                vc.play(discord.FFmpegPCMAudio(clip))
+            except:
+                await ctx.send('This is clip could not be found, try complaing to sleepy about his shity bot please.')
+            else:
+                while vc.is_playing():
+                    await asyncio.sleep(.1)
+                vc.stop()
+            finally:
+                await vc.disconnect()
+
     # the Halvor Persson Meme
     @commands.command(name = 'hallo', help = 'gives life changing information about our lord and savior', category = 'main')
     async def hallo_wurold(self, ctx):
@@ -17,14 +36,18 @@ class Main_Commands(commands.Cog):
     # play the wet wet mud clip in call
     @commands.command(name = 'bae', help = 'play a relatable clip from i think you should leave')
     async def wet_wet_mud(self, ctx):
-        try:
-            tar = ctx.author.voice.channel
-        except:
-            await ctx.send(f'{ctx.author}, you need to be in a voice channel for me to play a clip')
-        else:
-            vc = await tar.connect()
-            vc.play(discord.FFmpegPCMAudio('C:/Users/NDK2018/Documents/GitHub/halvor_robot/audio/wetwetmud.mp3'))
-            while vc.is_playing():
-                await asyncio.sleep(.1)
-            vc.stop()
-            await vc.disconnect()
+        await self.play_audio_clip(ctx, 'audio/wetwetmud.mp3')
+        # try:
+        #     tar = ctx.author.voice.channel
+        # except:
+        #     await ctx.send(f'{ctx.author}, you need to be in a voice channel for me to play a clip')
+        # else:
+        #     vc = await tar.connect()
+        #     vc.play(discord.FFmpegPCMAudio('C:/Users/NDK2018/Documents/GitHub/halvor_robot/audio/wetwetmud.mp3'))
+        #     while vc.is_playing():
+        #         await asyncio.sleep(.1)
+        #     vc.stop()
+        #     await vc.disconnect()
+
+
+
