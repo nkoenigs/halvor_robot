@@ -37,17 +37,6 @@ class Main_Commands(commands.Cog):
     @commands.command(name = 'bae', help = 'play a relatable clip from i think you should leave')
     async def wet_wet_mud(self, ctx):
         await self.play_audio_clip(ctx, 'audio/wetwetmud.mp3')
-        # try:
-        #     tar = ctx.author.voice.channel
-        # except:
-        #     await ctx.send(f'{ctx.author}, you need to be in a voice channel for me to play a clip')
-        # else:
-        #     vc = await tar.connect()
-        #     vc.play(discord.FFmpegPCMAudio('C:/Users/NDK2018/Documents/GitHub/halvor_robot/audio/wetwetmud.mp3'))
-        #     while vc.is_playing():
-        #         await asyncio.sleep(.1)
-        #     vc.stop()
-        #     await vc.disconnect()
 
 
 
