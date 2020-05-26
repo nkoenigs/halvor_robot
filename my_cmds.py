@@ -23,8 +23,8 @@ class Main_Commands(commands.Cog):
             await ctx.send(f'{ctx.author}, you need to be in a voice channel for me to play a clip')
         else:
             vc = await tar.connect()
-            vc.play(discord.FFmpegPCMAudio('audio/wetwetmud.mp3'), after=lambda e: print('done', e))
-            while not vc.is_done():
+            vc.play(discord.FFmpegPCMAudio('C:/Users/NDK2018/Documents/GitHub/halvor_robot/audio/wetwetmud.mp3'))
+            while vc.is_playing():
                 await asyncio.sleep(10)
             vc.stop()
             await vc.disconnect()
