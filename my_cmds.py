@@ -38,14 +38,21 @@ class Main_Commands(commands.Cog):
     async def wet_wet_mud(self, ctx):
         await self.play_audio_clip(ctx, 'audio/wetwetmud.mp3')
 
+    # play samanthas ayaya
+    @commands.command(name = 's_ayayaya', help = 'play a relatable clip from i think you should leave')
+    async def samantha_ayaya(self, ctx):
+        await self.play_audio_clip(ctx, 'audio/samantha_ayayaya.mp3')
+
     # play issacs im a little fat girl
     @commands.command(name = 'shame', help = 'play ignohrs classic line')
-    async def wet_wet_mud(self, ctx):
-        for role in ctx.author.guild.roles:
+    async def ignhor_shame(self, ctx):
+        played_clip = False
+        for role in ctx.author.roles:            
             if(role.id == 714980503282778133):
                 await self.play_audio_clip(ctx, 'audio/imalittlefatgirl.mp3')
-            else:
-                await ctx.send('Sorry fam but this command isn\'t going to work for you.')
+                played_clip = True
+        if(not played_clip):
+            await ctx.send('Sorry fam but this command isn\'t going to work for you.')
 
     # updates halvor to the newest version
     @commands.command(name = 'update', help = 'restarts me with the newest github pull')
