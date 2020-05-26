@@ -1,6 +1,12 @@
 import asyncio
+import copy
 import discord
 from discord.ext import commands
+
+#helper outside class?
+# helper for scoreboard
+def grab_score(player):
+    return player.score
 
 # class containing the update capabilties for Halvor Persson
 class WikipediaGame(commands.Cog):
@@ -23,13 +29,22 @@ class WikipediaGame(commands.Cog):
         for player in self.player_list:
             name_list.append(player.name)
         return name_list
-        
+    
 
     # starts a new game
     @commands.command(name = 'new_wiki_game', help = 'restarts the wiki game with a fresh set of players and clues')
     async def new_wiki_game(self, ctx):
         self.player_list = []
         await ctx.send('A new game has been created, the old game is no more.')
+    
+    # prints out the current player scores
+    # TODO test this shit
+    @commands.command(name= 'wiki_scores', help = 'check to see who is winning the wikigame atm!')
+    async def wiki_scores(self, ctx):
+        my_list = copy.deepcopy(self.player_list)
+        my_list.sort(key=grab_score)
+        for player in my_list:
+            await ctx.send(f'{player.name} has a score of {player.score}')
     
     # join the game as a new player
     @commands.command(name = 'join_wiki_game', help = 'join an active wiki game as a new player')
@@ -43,4 +58,4 @@ class WikipediaGame(commands.Cog):
             await ctx.send(f'{ctx.author.nick} has joined the wikipedia game!')
             if(ctx.author.dm_channel == None):
                 await ctx.author.create_dm()
-            await ctx.author.dm_channel.send(f'Hallo {ctx.author.nick}, welcome to the wikipeadia game!')
+            await ctx.author.dm_channel.send(f'Hallo {ctx.author.nick}, welcome to the wikipeadia game!, please send me your article')
