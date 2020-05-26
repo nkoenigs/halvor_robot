@@ -11,8 +11,9 @@ class WikipediaGame(commands.Cog):
         
     # a inner class for a player in the game
     class Players:
-        def __init__(self, player_name):
-            self.name = player_name
+        def __init__(self, member):
+            self.member = member
+            self.name = member.nick
             self.article = None
             self.score = 0
 
@@ -37,7 +38,9 @@ class WikipediaGame(commands.Cog):
         if(ctx.author.nick in name_list):
             await ctx.send(f'Error, a player with the name {ctx.author.nick} is allready in this game')
         else:
-            new_player = self.Players(ctx.author.nick)
+            new_player = self.Players(ctx.author)
             self.player_list.append(new_player)
             await ctx.send(f'{ctx.author.nick} has joined the wikipedia game!')
-            
+            if(ctx.author.dm_channel == None):
+                await ctx.author.create_dm()
+            await ctx.author.dm_channel.send(f'Hallo {ctx.author.nick}, welcome to the wikipeadia game!')
