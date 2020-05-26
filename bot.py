@@ -14,9 +14,11 @@ import discord
 from discord.ext import commands
 
 from my_cmds import Main_Commands
+from wikigame import WikipediaGame
 
 bot = commands.Bot(command_prefix='>')
 bot.add_cog(Main_Commands(bot))
+bot.add_cog(WikipediaGame(bot))
 
 # print a console message to confirm connection
 @bot.event

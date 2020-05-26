@@ -4,7 +4,7 @@ import ffmpeg
 from discord.ext import commands
 
 # class containing all of the Main commands for Halvor Persson
-class Main_Commands(commands.Cog):
+class Main_Commands(commands.Cog):   
     def __init__(self, bot):
         self.bot = bot
         self._last_member = None
@@ -29,7 +29,7 @@ class Main_Commands(commands.Cog):
                 await vc.disconnect()
 
     # the Halvor Persson Meme
-    @commands.command(name = 'hallo', help = 'gives life changing information about our lord and savior', category = 'main')
+    @commands.command(name = 'hallo', help = 'gives life changing information about our lord and savior')
     async def hallo_wurold(self, ctx):
         await ctx.send('Hallo I, Halvor Persson, (born 11 March 1966) am a Norwegian former ski jumper!')
 
@@ -37,6 +37,11 @@ class Main_Commands(commands.Cog):
     @commands.command(name = 'bae', help = 'play a relatable clip from i think you should leave')
     async def wet_wet_mud(self, ctx):
         await self.play_audio_clip(ctx, 'audio/wetwetmud.mp3')
+
+    # updates halvor to the newest version
+    @commands.command(name = 'update', help = 'restarts me with the newest github pull')
+    async def self_update(self, ctx):
+        await ctx.send('Yeah this dosen\'t work yet fam')
 
 
 
