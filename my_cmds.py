@@ -1,5 +1,6 @@
-import os
+import asyncio
 import discord
+import ffmpeg
 from discord.ext import commands
 
 # class containing all of the Main commands for Halvor Persson
@@ -22,4 +23,8 @@ class Main_Commands(commands.Cog):
             await ctx.send(f'{ctx.author}, you need to be in a voice channel for me to play a clip')
         else:
             vc = await tar.connect()
-            vc.play(discord.FFmpegPCMAudio('audio/wetwetmud.mp3'))
+            vc.play(discord.FFmpegPCMAudio('audio/wetwetmud.mp3'), after=lambda e: print('done', e))
+            while not vc.is_done():
+                await asyncio.sleep(10)
+            vc.stop()
+            await vc.disconnect()

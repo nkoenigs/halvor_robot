@@ -6,6 +6,7 @@
 # dependencies:
 # $ pip install discord.py
 # $ pip install PyNaCl
+# $ pip install ffmpeg-python ???
 
 import os
 import discord
