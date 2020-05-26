@@ -26,7 +26,6 @@ async def on_ready():
     print(f'{bot.user} has connected to Discord!')
 
 # Send a DM to welcome newbies to the sever while also giveing them a role
-# TODO :test giveing role to a new account
 @bot.event
 async def on_member_join(member):
     if(member.dm_channel == None):
