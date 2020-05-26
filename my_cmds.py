@@ -44,6 +44,8 @@ class Main_Commands(commands.Cog):
         for role in ctx.author.guild.roles:
             if(role.id == 714980503282778133):
                 await self.play_audio_clip(ctx, 'audio/imalittlefatgirl.mp3')
+            else:
+                await ctx.send('Sorry fam but this command isn\'t going to work for you.')
 
     # updates halvor to the newest version
     @commands.command(name = 'update', help = 'restarts me with the newest github pull')
