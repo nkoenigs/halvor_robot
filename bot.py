@@ -24,15 +24,11 @@ async def on_ready():
 # TODO :test giveing role to a new account
 @bot.event
 async def on_member_join(member):
-    await member.create_dm()
+    if(await member.dm_channel == None):
+        await member.create_dm()
     await member.dm_channel.send(f'Hallo {member.name}, welcome to the windowless room!')
     role = member.guild.roles.get('386317626533609472')
     await member.add_roles(role)
-
-# the Halvor Persson Meme
-#@bot.command(name = 'hallo', help = 'gives life changing information about our lord and savior', category = 'main')
-#async def hallo_wurold(ctx):
-#    await ctx.send('Hallo I, Halvor Persson, (born 11 March 1966) am a Norwegian former ski jumper!')
 
 if __name__ == "__main__":
     # yes i know this is bad practice but my .env file wouldn't load an I'm no superman
