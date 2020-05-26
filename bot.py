@@ -10,8 +10,10 @@ import os
 import discord
 from discord.ext import commands
 
-#client = discord.Client()
+from my_cmds import Main_Commands
+
 bot = commands.Bot(command_prefix='>')
+bot.add_cog(Main_Commands(bot))
 
 # print a console message to confirm connection
 @bot.event
@@ -28,11 +30,11 @@ async def on_member_join(member):
     await member.add_roles(role)
 
 # the Halvor Persson Meme
-@bot.command(name = 'hallo', help = 'gives life changing information about our lord and savior')
-async def hallo_wurold(ctx):
-    await ctx.send('Hallo I, Halvor Persson, (born 11 March 1966) am a Norwegian former ski jumper!')
+#@bot.command(name = 'hallo', help = 'gives life changing information about our lord and savior', category = 'main')
+#async def hallo_wurold(ctx):
+#    await ctx.send('Hallo I, Halvor Persson, (born 11 March 1966) am a Norwegian former ski jumper!')
 
-
-# yes i know this is bad practice but my .env file wouldn't load an I'm no superman
-# just promise you won't read the next line okay?... okay.
-bot.run('NzE0NzI3NjI3MTEzMzY1NTA0.' + 'XszTuQ.UbPBWYzelALUzm0LmfOK97op_wY')
+if __name__ == "__main__":
+    # yes i know this is bad practice but my .env file wouldn't load an I'm no superman
+    # just promise you won't read the next line okay?... okay.
+    bot.run('NzE0NzI3NjI3MTEzMzY1NTA0.' + 'XszTuQ.UbPBWYzelALUzm0LmfOK97op_wY')
