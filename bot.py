@@ -11,7 +11,7 @@ import discord
 
 # yes i know this is bad practice but my .env file wouldn't load an I'm no superman
 # just promise you won't read the next line okay?... okay.
-TOKEN = 'NzE0NzI3NjI3MTEzMzY1NTA0.' + ' Xsy4eA.TmgLM1scrNJXli9VFIu5i_aSIAU'
+TOKEN = 'NzE0NzI3NjI3MTEzMzY1NTA0.' + 'XszTuQ.UbPBWYzelALUzm0LmfOK97op_wY'
 
 client = discord.Client()
 
