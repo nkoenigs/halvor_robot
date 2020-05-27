@@ -8,6 +8,7 @@
 # $ pip install PyNaCl
 # $ pip install ffmpeg-python ?not sure if needed?
 # add install ffmpeg and add it bin to the PATH
+# i used this for centos https://linuxize.com/post/how-to-install-ffmpeg-on-centos-8/
 # $ pip install wikipedia
 
 import os

@@ -21,7 +21,7 @@ class Main_Commands(commands.Cog):
                 vc.play(discord.FFmpegPCMAudio(clip))
             except Exception as inst:
                 await ctx.send('This is clip could not be found, try complaing to sleepy about his shity bot please.')
-                await ctx.send(f'if he asks about the error its {type(inst)}, {inst}')
+                await ctx.send(f'If he asks about the error its {type(inst)}, {inst}')
             else:
                 while vc.is_playing():
                     await asyncio.sleep(.1)
