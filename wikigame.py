@@ -1,6 +1,7 @@
 import asyncio
 import copy
 import discord
+import wikipedia
 from discord.ext import commands
 
 #helper outside class?
@@ -29,7 +30,6 @@ class WikipediaGame(commands.Cog):
         for player in self.player_list:
             name_list.append(player.name)
         return name_list
-    
 
     # starts a new game
     @commands.command(name = 'new_wiki_game', help = 'restarts the wiki game with a fresh set of players and clues')
@@ -58,4 +58,12 @@ class WikipediaGame(commands.Cog):
             await ctx.send(f'{ctx.author.nick} has joined the wikipedia game!')
             if(ctx.author.dm_channel == None):
                 await ctx.author.create_dm()
-            await ctx.author.dm_channel.send(f'Hallo {ctx.author.nick}, welcome to the wikipeadia game!, please send me your article')
+            await ctx.author.dm_channel.send(f'Hallo {ctx.author.nick}, welcome to the wikipeadia game!, please send me your article (use cmd >my_article)')
+
+    # give the bot my article for the game
+    @commands.command(name = 'my_article', help = 'give halvor an article for the wikipedia game')
+    async def give_article(self, ctx):
+        name_list = self.list_names()
+        if(not ctx.author.nick in name_list):
+            await ctx.send(f'{ctx.author.nick} is not in this wiki game. Try the >join_wiki_game command')
+        else

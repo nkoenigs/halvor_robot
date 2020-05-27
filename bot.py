@@ -8,6 +8,7 @@
 # $ pip install PyNaCl
 # $ pip install ffmpeg-python ?not sure if needed?
 # add install ffmpeg and add it bin to the PATH
+# $ pip install wikipedia
 
 import os
 import discord
