@@ -44,11 +44,6 @@ class Main_Commands(commands.Cog):
     async def samantha_ayaya(self, ctx):
         await self.play_audio_clip(ctx, 'audio/samantha_ayayaya.mp3')
 
-    # play e&a poop into wine clip
-    @commands.command(name = 'wine', help = 'play a great e&a clip')
-    async def samantha_ayaya(self, ctx):
-        await self.play_audio_clip(ctx, 'audio/poopintowine.wav')
-
     # play issacs im a little fat girl
     @commands.command(name = 'shame', help = 'play ignohrs classic line')
     async def ignhor_shame(self, ctx):
