@@ -66,4 +66,5 @@ class WikipediaGame(commands.Cog):
         name_list = self.list_names()
         if(not ctx.author.nick in name_list):
             await ctx.send(f'{ctx.author.nick} is not in this wiki game. Try the >join_wiki_game command')
-        else
+        else:
+            i = 0
