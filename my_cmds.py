@@ -40,7 +40,7 @@ class Main_Commands(commands.Cog):
         await self.play_audio_clip(ctx, 'audio/wetwetmud.mp3')
 
     # play samanthas ayaya
-    @commands.command(name = 's_ayayaya', help = 'play a relatable clip from i think you should leave')
+    @commands.command(name = 's_ayayaya', help = 'play a clip of ayayaya')
     async def samantha_ayaya(self, ctx):
         await self.play_audio_clip(ctx, 'audio/samantha_ayayaya.mp3')
 
