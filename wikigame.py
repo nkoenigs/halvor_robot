@@ -1,6 +1,7 @@
 import asyncio
 import copy
 import discord
+import random
 from discord.ext import commands
 
 # class containing the update capabilties for Halvor Persson
@@ -53,7 +54,7 @@ class WikipediaGame(commands.Cog):
     # leave the game
     @commands.command(name = 'leave_wiki_game', help = 'join an active wiki game as a new player')
     async def leave_wiki_game(self, ctx):
-        target = find_player_obj(ctx)
+        target = self.find_player_obj(ctx)
         if target == None:
             await ctx.send(f'Error, a player with the name {ctx.author.nick} is noty in this game')
         else:
@@ -89,6 +90,30 @@ class WikipediaGame(commands.Cog):
                 await ctx.send(f'your article has been set')
         except:
             await ctx.send('There was an error with this submission, try again i guess.')
+
+    # start a round of the game
+    @commands.command(name = 'wiki_draw', help = 'start a round of the game by drawing an article.')
+    async def draw_article(self, ctx):
+        if not ctx.channel == self.game_channel:
+            await ctx.send('This command should only be called in the main game channel')
+            return
+        if len(self.player_list) < 2:
+            await ctx.send('Game needs atleast 2 players fam')
+            return
+        for player in self.player_list:
+            if player.article == None:
+                await ctx.send(f'{player.name} has not submited an article yet.')
+                return
+        self.current_guesser = self.player_list[self.guesser_index]
+        self.guesser_index += 1
+        if self.guesser_index >= len(self.player_list):
+            self.guesser_index = 0
+        while True:
+            drawn = random.choice(self.player_list)
+            if not drawn == self.current_guesser:
+                break
+        self.correct_player = drawn
+        await ctx.send(f'{self.current_guesser.name} is guessing for the following article title: {self.correct_player.article}')
 
 # #helper outside class?
 # # helper for scoreboard
