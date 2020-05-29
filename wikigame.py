@@ -56,7 +56,7 @@ class WikipediaGame(commands.Cog):
     async def leave_wiki_game(self, ctx):
         target = self.find_player_obj(ctx)
         if target == None:
-            await ctx.send(f'Error, a player with the name {ctx.author.nick} is noty in this game')
+            await ctx.send(f'Error, a player with the name {ctx.author.nick} is not in this game')
         else:
             try:
                 self.player_list.remove(target)
@@ -67,6 +67,7 @@ class WikipediaGame(commands.Cog):
     # prints out the current player scores
     @commands.command(name= 'wiki_scores', help = 'check to see who is winning the wikigame atm!')
     async def wiki_scores(self, ctx):
+        await ctx.send('SCOREBOARD:')
         for player in self.player_list:
             await ctx.send(f'{player.name} has a score of {player.score}')
 
