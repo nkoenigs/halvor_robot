@@ -32,7 +32,7 @@ class WikipediaGame(commands.Cog):
     @commands.command(name = 'new_wiki_game', help = 'restarts the wiki game with a fresh set of players and clues')
     async def new_wiki_game(self, ctx):
         self.player_list = []
-        self.lguesser_index = 0
+        self.guesser_index = 0
         self.game_channel = ctx.channel
         await ctx.send('A new game has been created, the old game is no more.')
 
@@ -114,6 +114,29 @@ class WikipediaGame(commands.Cog):
                 break
         self.correct_player = drawn
         await ctx.send(f'{self.current_guesser.name} is guessing for the following article title: {self.correct_player.article}')
+
+    # place a guess
+    @commands.command(name = 'wiki_guess', help = 'place a guess as for who is the correct player')
+    async def place_guess(self, ctx, guess):
+        if not ctx.channel == self.game_channel:
+            await ctx.send('This command should only be called in the main game channel')
+        elif not ctx.author.nick == self.current_guesser.name:
+            await ctx.send('This command should only be called by the current guesser')
+        elif ctx.author.nick == guess:
+            await ctx.send('You can\' guess yourself fam')
+        else:
+            guessed_player = self.find_player_obj(guess)
+            if guessed_player == None:
+                await ctx.send(f'{guess} is not a player in the game')
+            guessed_player.score += 1
+            if guessed_player == self.correct_player:
+                self.current_guesser.score += 1
+                await ctx.send('Correct Guess!')
+            else:
+                await ctx.send(f'Wrong! {self.correct_player} was the truth')
+
+    
+
 
 # #helper outside class?
 # # helper for scoreboard
