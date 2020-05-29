@@ -4,6 +4,13 @@ import discord
 import random
 from discord.ext import commands
 
+# TODO: users do not have nicknames if the message is sent via a dm (no guild)
+# to fix this I need to implement a (nickname) system into the player object so i can use 
+# the discord acount name (ex. sleepy#1234) for all backend comparisons
+# this is needed as noone wants to type (sleepy#1234) when placeing a guess ):
+# also all channel compersions need to be comparing the hash not the pointer
+
+
 # class containing the update capabilties for Halvor Persson
 class WikipediaGame(commands.Cog):
     def __init__(self, bot):
