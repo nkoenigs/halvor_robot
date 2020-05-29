@@ -24,7 +24,7 @@ class WikipediaGame(commands.Cog):
     def find_player_obj(self, target):
         selected = None
         for player in self.player_list:
-            if player.nick == target:
+            if player.member.nick == target:
                 selected = player
         return selected
 
@@ -54,7 +54,7 @@ class WikipediaGame(commands.Cog):
     # leave the game
     @commands.command(name = 'leave_wiki', help = 'join an active wiki game as a new player')
     async def leave_wiki(self, ctx):
-        target = self.find_player_obj(ctx)
+        target = self.find_player_obj(ctx.author.nick)
         if target == None:
             await ctx.send(f'Error, a player with the name {ctx.author.nick} is not in this game')
         else:
@@ -69,7 +69,7 @@ class WikipediaGame(commands.Cog):
     async def wiki_scores(self, ctx):
         await ctx.send('SCOREBOARD:')
         for player in self.player_list:
-            await ctx.send(f'{player.name} has a score of {player.score}')
+            await ctx.send(f'{player.member.nick} has a score of {player.score}')
 
     # give the bot my article for the game
     @commands.command(name = 'my_article', help = 'give halvor an article for the wikipedia game, type the title of your article after the commands (>my_article ___)')
@@ -108,14 +108,14 @@ class WikipediaGame(commands.Cog):
             if not drawn == self.current_guesser:
                 break
         self.correct_player = drawn
-        await ctx.send(f'{self.current_guesser.name} is guessing for the following article title: {self.correct_player.article}')
+        await ctx.send(f'{self.current_guesser.member.nick} is guessing for the following article title: {self.correct_player.article}')
 
     # place a guess
     @commands.command(name = 'wiki_guess', help = 'place a guess as for who is the correct player')
     async def place_guess(self, ctx, guess):
         if not ctx.channel == self.game_channel:
             await ctx.send('This command should only be called in the main game channel')
-        elif not ctx.author.nick == self.current_guesser.name:
+        elif not ctx.author.nick == self.current_guesser.member.nick:
             await ctx.send('This command should only be called by the current guesser')
         elif ctx.author.nick == guess:
             await ctx.send('You can\' guess yourself fam')
