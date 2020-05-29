@@ -64,16 +64,10 @@ class WikipediaGame(commands.Cog):
             except:
                 await ctx.send('There was an error removing you from the game')
 
-    # helper for scoreboard
-    def grab_score(self, player):
-        return player.score
-
     # prints out the current player scores
     @commands.command(name= 'wiki_scores', help = 'check to see who is winning the wikigame atm!')
     async def wiki_scores(self, ctx):
-        my_list = copy.deepcopy(self.player_list)
-        my_list.sort(key=self.grab_score)
-        for player in my_list:
+        for player in self.player_list:
             await ctx.send(f'{player.name} has a score of {player.score}')
 
     # give the bot my article for the game
