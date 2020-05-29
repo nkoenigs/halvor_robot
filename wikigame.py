@@ -39,10 +39,10 @@ class WikipediaGame(commands.Cog):
     # join the game as a new player
     @commands.command(name = 'join_wiki', help = 'join an active wiki game as a new player')
     async def join_wiki(self, ctx):
-        if not str(ctx.channel) == str(self.game_channel):
+        if not hash(ctx.channel) == hash(self.game_channel):
             await ctx.send(f'Please only join the game from the bot channel')
-        elif self.find_player_obj(ctx) == None:
-            await ctx.send(f'Error, a player with the name {ctx.author.nick} is allready in this game')
+        elif not self.find_player_obj(ctx) == None:
+            await ctx.send(f'Error, a player with the name {ctx.author.nick} is already in this game')
         else:
             new_player = self.Players(ctx.author)
             self.player_list.append(new_player)
