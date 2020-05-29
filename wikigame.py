@@ -29,7 +29,7 @@ class WikipediaGame(commands.Cog):
         return selected
 
     # starts a new game
-    @commands.command(name = 'new_wiki_game', help = 'restarts the wiki game with a fresh set of players and clues')
+    @commands.command(name = 'new_wiki', help = 'restarts the wiki game with a fresh set of players and clues')
     async def new_wiki(self, ctx):
         self.player_list = []
         self.guesser_index = 0
@@ -37,7 +37,7 @@ class WikipediaGame(commands.Cog):
         await ctx.send('A new game has been created, the old game is no more.')
 
     # join the game as a new player
-    @commands.command(name = 'join_wiki_game', help = 'join an active wiki game as a new player')
+    @commands.command(name = 'join_wiki', help = 'join an active wiki game as a new player')
     async def join_wiki(self, ctx):
         if not ctx.channel == self.game_channel:
             await ctx.send(f'Please only join the game from the bot channel')
@@ -52,7 +52,7 @@ class WikipediaGame(commands.Cog):
             await ctx.author.dm_channel.send(f'Hallo {ctx.author.nick}, welcome to the wikipeadia game!, please send me your article (use cmd >my_article)')
 
     # leave the game
-    @commands.command(name = 'leave_wiki_game', help = 'join an active wiki game as a new player')
+    @commands.command(name = 'leave_wiki', help = 'join an active wiki game as a new player')
     async def leave_wiki(self, ctx):
         target = self.find_player_obj(ctx)
         if target == None:
