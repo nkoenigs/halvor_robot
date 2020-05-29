@@ -56,10 +56,10 @@ class WikipediaGame(commands.Cog):
         else:
             new_player = self.Players(ctx.author, tag)
             self.player_list.append(new_player)
-            await ctx.send(f'{ctx.author.name} has joined the wikipedia game!')
+            await ctx.send(f'{tag} has joined the wikipedia game!')
             if ctx.author.dm_channel == None:
                 await ctx.author.create_dm()
-            await ctx.author.dm_channel.send(f'Hallo {ctx.author.name}, welcome to the wikipeadia game!, please send me your article (use cmd >my_article)')
+            await ctx.author.dm_channel.send(f'Hallo {tag}, welcome to the wikipeadia game!, please send me your article (use cmd >my_article)')
 
     # leave the game
     @commands.command(name = 'leave_wiki', help = 'join an active wiki game as a new player')
@@ -79,7 +79,7 @@ class WikipediaGame(commands.Cog):
     async def wiki_scores(self, ctx):
         await ctx.send('SCOREBOARD:')
         for player in self.player_list:
-            await ctx.send(f'{player.member.name} has a score of {player.score}')
+            await ctx.send(f'{player.name} has a score of {player.score}')
 
     # give the bot my article for the game
     @commands.command(name = 'my_article', help = 'give halvor an article for the wikipedia game, type the title of your article after the commands (>my_article ___)')
