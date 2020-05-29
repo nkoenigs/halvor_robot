@@ -130,7 +130,10 @@ class WikipediaGame(commands.Cog):
         elif ctx.author.name == guess:
             await ctx.send('You can\' guess yourself fam')
         else:
-            guessed_player = self.find_player_obj(guess)
+            guessed_player = None
+            for player in self.player_list:
+                if player.name == guess:
+                    guessed_player = player
             if guessed_player == None:
                 await ctx.send(f'{guess} is not a player in the game')
             guessed_player.score += 1
