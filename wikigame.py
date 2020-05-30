@@ -13,6 +13,7 @@ class WikipediaGame(commands.Cog):
         self.current_guesser = None
         self.guesser_index = 0
         self.game_channel = None
+        self.score_flag = False
 
     # a inner class for a player in the game
     class Players:
@@ -32,6 +33,7 @@ class WikipediaGame(commands.Cog):
     # starts a new game
     @commands.command(name = 'new_wiki', help = 'restarts the wiki game with a fresh set of players and clues')
     async def new_wiki(self, ctx):
+        self.score_flag = False
         self.player_list = []
         self.guesser_index = 0
         self.game_channel = ctx.channel
@@ -114,6 +116,7 @@ class WikipediaGame(commands.Cog):
             if not drawn == self.current_guesser:
                 break
         self.correct_player = drawn
+        self.score_flag = True
         await ctx.send(f'{self.current_guesser.name} is guessing for the following article title: {self.correct_player.article}')
 
     # place a guess
@@ -123,6 +126,8 @@ class WikipediaGame(commands.Cog):
             await ctx.send('This command should only be called in the main game channel')
         elif not ctx.author.name == self.current_guesser.member.name:
             await ctx.send('This command should only be called by the current guesser')
+        elif not self.score_flag:
+            await ctx.send('Now is not the time for scoreing')
         else:
             guessed_player = None
             for player in self.player_list:
@@ -133,6 +138,7 @@ class WikipediaGame(commands.Cog):
             elif guessed_player.name == self.current_guesser.name:
                 await ctx.send('You can\' guess yourself fam')
             else:
+                self.score_flag = False
                 guessed_player.score += 1
                 if guessed_player == self.correct_player:
                     self.current_guesser.score += 1
