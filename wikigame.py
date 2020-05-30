@@ -83,7 +83,10 @@ class WikipediaGame(commands.Cog):
 
     # give the bot my article for the game
     @commands.command(name = 'my_article', help = 'give halvor an article for the wikipedia game, type the title of your article after the commands (>my_article ___)')
-    async def give_article(self, ctx, title):
+    async def give_article(self, ctx, *argv):
+        title = ''
+        for arg in argv:
+            title = title + arg + ' '
         this_player = self.find_player_obj(ctx.author.name)
         try:
             if this_player == None:
