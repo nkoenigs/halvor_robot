@@ -40,5 +40,4 @@ if __name__ == "__main__":
     # yes i know this is bad practice but my .env file wouldn't load an I'm no superman
     # just promise you won't read the next line okay?... okay.
     bot.run('NzE0NzI3NjI3MTEzMzY1NTA0.' + 'XszTuQ.UbPBWYzelALUzm0LmfOK97op_wY')
-
     
