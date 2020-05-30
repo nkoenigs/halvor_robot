@@ -45,9 +45,14 @@ class Main_Commands(commands.Cog):
         await self.play_audio_clip(ctx, 'audio/samantha_ayayaya.mp3')
 
     # do not call this ever
-    @commands.command(name = 'loud', help = ' do not call this ever')
-    async def samantha_ayaya(self, ctx):
+    @commands.command(name = 'loud', help = 'do not call this ever')
+    async def loud_bwaaa(self, ctx):
         await self.play_audio_clip(ctx, 'audio/bwaaaaaa.mp3')
+
+    # do not call this ever
+    @commands.command(name = 'get_out', help = 'purge normies from the call')
+    async def normies_get_out(self, ctx):
+        await self.play_audio_clip(ctx, 'audio/normie.mp3')
 
     # play nice
     @commands.command(name = 'nice', help = 'play a nice clip')
