@@ -9,6 +9,8 @@ class Main_Commands(commands.Cog):
         self.bot = bot
         self._last_member = None
 
+    # TODO add audio balanceing so we can amp up bae
+
     #plays a given audio clip in the call of ctx's sender
     async def play_audio_clip(self, ctx, clip):
         try:
@@ -53,6 +55,10 @@ class Main_Commands(commands.Cog):
     @commands.command(name = 'get_out', help = 'purge normies from the call')
     async def normies_get_out(self, ctx):
         await self.play_audio_clip(ctx, 'audio/normie.mp3')
+
+    @commands.command(name = 'treat', help = 'dokoda special request')
+    async def normies_get_out(self, ctx):
+        await self.play_audio_clip(ctx, 'audio/treat.mp3')
 
     # play nice
     @commands.command(name = 'nice', help = 'play a nice clip')
