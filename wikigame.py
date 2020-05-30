@@ -118,7 +118,7 @@ class WikipediaGame(commands.Cog):
             if not drawn == self.current_guesser:
                 break
         self.correct_player = drawn
-        await ctx.send(f'{self.current_guesser.member.name} is guessing for the following article title: {self.correct_player.article}')
+        await ctx.send(f'{self.current_guesser.name} is guessing for the following article title: {self.correct_player.article}')
 
     # place a guess
     @commands.command(name = 'wiki_guess', help = 'place a guess as for who is the correct player')
@@ -141,103 +141,4 @@ class WikipediaGame(commands.Cog):
                 self.current_guesser.score += 1
                 await ctx.send('Correct Guess!')
             else:
-                await ctx.send(f'Wrong! {self.correct_player} was the truth')
-
-    
-
-
-# #helper outside class?
-# # helper for scoreboard
-# def grab_score(player):
-#     return player.score
-
-# # class containing the update capabilties for Halvor Persson
-# class WikipediaGame(commands.Cog):
-#     def __init__(self, bot):
-#         self.bot = bot
-#         self.last_member = 0
-#         self.player_list = []
-#         self.correct_player = None
-#         self.game_channel = None
-        
-#     # a inner class for a player in the game
-#     class Players:
-#         def __init__(self, member):
-#             self.member = member
-#             self.name = member.name
-#             self.article = None
-#             self.score = 0
-
-#     # returns a list of all of the players names
-#     def list_names(self):
-#         name_list = []
-#         for player in self.player_list:
-#             name_list.append(player.name)
-#         return name_list
-
-#     # starts a new game
-#     @commands.command(name = 'new_wiki_game', help = 'restarts the wiki game with a fresh set of players and clues')
-#     async def new_wiki_game(self, ctx):
-#         self.player_list = []
-#         self.last_member = 0
-#         self.game_channel = ctx.channel
-#         await ctx.send('A new game has been created, the old game is no more.')
-    
-#     # prints out the current player scores
-#     # TODO test this shit
-#     @commands.command(name= 'wiki_scores', help = 'check to see who is winning the wikigame atm!')
-#     async def wiki_scores(self, ctx):
-#         my_list = copy.deepcopy(self.player_list)
-#         my_list.sort(key=grab_score)
-#         for player in my_list:
-#             await ctx.send(f'{player.name} has a score of {player.score}')
-    
-#     # join the game as a new player
-#     @commands.command(name = 'join_wiki_game', help = 'join an active wiki game as a new player')
-#     async def join_wiki_game(self, ctx):
-#         name_list = self.list_names()
-#         if ctx.author.name in name_list:
-#             await ctx.send(f'Error, a player with the name {ctx.author.name} is allready in this game')
-#         else:
-#             new_player = self.Players(ctx.author)
-#             self.player_list.append(new_player)
-#             await ctx.send(f'{ctx.author.name} has joined the wikipedia game!')
-#             if ctx.author.dm_channel == None:
-#                 await ctx.author.create_dm()
-#             await ctx.author.dm_channel.send(f'Hallo {ctx.author.name}, welcome to the wikipeadia game!, please send me your article (use cmd >my_article)')
-
-#     # give the bot my article for the game
-#     @commands.command(name = 'my_article', help = 'give halvor an article for the wikipedia game, type the title of your article after the commands (>my_article ___)')
-#     async def give_article(self, ctx, title):
-#         this_player = None
-#         for player in self.player_list:
-#             if player.name == ctx.author.name:
-#                 this_player = player
-#         try:
-#             if this_player == None:
-#                 await ctx.send(f'{ctx.author.name} is not in this wiki game. Try the >join_wiki_game command')
-#             elif len(title) <= 1 :
-#                 await ctx.send(f'That article title is very short, im not going to acept it')
-#             else:
-#                 this_player.article = title
-#                 await ctx.send(f'your article has been set')
-#         except:
-#             await ctx.send('There was an error with this submission, try again i guess.')
-
-#     # give my answer (guesser only plz)
-#     @commands.command(name = 'guess', help = 'for guesser use only! select who\'s article you think was true (>guess ____)')
-#     async def guess(self, ctx, guess):
-#         name_list = self.list_names()
-#         if not guess in name_list:
-#             await ctx.send(f'{guess} is not a player in the game, try again')
-#         elif ctx.author.name == guess:
-#             await ctx.send('Hey asshole you can\' guess yourself')
-#         elif not ctx.channel == self.game_channel:
-#             await ctx.send('You can\'t report a score from a DM you dirty cheater')
-#         else:
-#             this_player = None
-#             for player in self.player_list:
-#                 if player.name == ctx.author.name:
-#                     this_player = player
-#             this_player.score += 1
-#             if guess == self.correct_player:
+                await ctx.send(f'Wrong! {self.correct_player.name} was the truth')
