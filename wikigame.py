@@ -130,8 +130,6 @@ class WikipediaGame(commands.Cog):
             await ctx.send('This command should only be called in the main game channel')
         elif not ctx.author.name == self.current_guesser.member.name:
             await ctx.send('This command should only be called by the current guesser')
-        elif ctx.author.name == guess:
-            await ctx.send('You can\' guess yourself fam')
         else:
             guessed_player = None
             for player in self.player_list:
@@ -139,9 +137,12 @@ class WikipediaGame(commands.Cog):
                     guessed_player = player
             if guessed_player == None:
                 await ctx.send(f'{guess} is not a player in the game')
-            guessed_player.score += 1
-            if guessed_player == self.correct_player:
-                self.current_guesser.score += 1
-                await ctx.send('Correct Guess!')
+            elif guessed_player.name == self.current_guesser.name:
+                await ctx.send('You can\' guess yourself fam')
             else:
-                await ctx.send(f'Wrong! {self.correct_player.name} was the truth')
+                guessed_player.score += 1
+                if guessed_player == self.correct_player:
+                    self.current_guesser.score += 1
+                    await ctx.send('Correct Guess!')
+                else:
+                    await ctx.send(f'Wrong! {self.correct_player.name} was the truth')
