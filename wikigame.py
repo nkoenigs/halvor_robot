@@ -75,7 +75,7 @@ class WikipediaGame(commands.Cog):
                 await ctx.send('There was an error removing you from the game')
 
     # prints out the current player scores
-    @commands.command(name= 'wiki_scores', help = 'check to see who is winning the wikigame atm!')
+    @commands.command(name= 'scoreboard', help = 'check to see who is winning the wikigame atm!')
     async def wiki_scores(self, ctx):
         await ctx.send('SCOREBOARD:')
         for player in self.player_list:
@@ -100,7 +100,7 @@ class WikipediaGame(commands.Cog):
             await ctx.send('There was an error with this submission, try again i guess.')
 
     # start a round of the game
-    @commands.command(name = 'wiki_draw', help = 'start a round of the game by drawing an article.')
+    @commands.command(name = 'draw', help = 'start a round of the game by drawing an article.')
     async def draw_article(self, ctx):
         if not ctx.channel == self.game_channel:
             await ctx.send('This command should only be called in the main game channel')
@@ -124,7 +124,7 @@ class WikipediaGame(commands.Cog):
         await ctx.send(f'{self.current_guesser.name} is guessing for the following article title: {self.correct_player.article}')
 
     # place a guess
-    @commands.command(name = 'wiki_guess', help = 'place a guess as for who is the correct player')
+    @commands.command(name = 'guess', help = 'place a guess as for who is the correct player')
     async def place_guess(self, ctx, guess):
         if not ctx.channel == self.game_channel:
             await ctx.send('This command should only be called in the main game channel')
