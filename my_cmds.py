@@ -36,31 +36,26 @@ class Main_Commands(commands.Cog):
     async def hallo_wurold(self, ctx):
         await ctx.send('Hallo I, Halvor Persson, (born 11 March 1966) am a Norwegian former ski jumper!')
 
-    # play the wet wet mud clip in call
     @commands.command(name = 'bae', help = 'play a relatable clip from i think you should leave')
     async def wet_wet_mud(self, ctx):
         await self.play_audio_clip(ctx, 'audio/wetwetmud.mp3')
 
-    # play samanthas ayaya
     @commands.command(name = 's_ayayaya', help = 'play a clip of ayayaya')
     async def samantha_ayaya(self, ctx):
         await self.play_audio_clip(ctx, 'audio/samantha_ayayaya.mp3')
 
-    # do not call this ever
     @commands.command(name = 'loud', help = 'do not call this ever')
     async def loud_bwaaa(self, ctx):
         await self.play_audio_clip(ctx, 'audio/bwaaaaaa.mp3')
 
-    # do not call this ever
     @commands.command(name = 'get_out', help = 'purge normies from the call')
     async def normies_get_out(self, ctx):
         await self.play_audio_clip(ctx, 'audio/normie.mp3')
 
     @commands.command(name = 'treat', help = 'dokoda special request')
-    async def normies_get_out(self, ctx):
+    async def treat(self, ctx):
         await self.play_audio_clip(ctx, 'audio/treat.mp3')
 
-    # play nice
     @commands.command(name = 'nice', help = 'play a nice clip')
     async def nice_meme(self, ctx):
         await self.play_audio_clip(ctx, 'audio/NiceMeme.mp3')
