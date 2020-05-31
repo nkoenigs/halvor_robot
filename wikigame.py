@@ -138,7 +138,7 @@ class WikipediaGame(commands.Cog):
             elif guessed_player.name == self.current_guesser.name:
                 await ctx.send('You can\' guess yourself fam')
             else:
-                self.score_flag = False
+                self.score_flag = False 
                 guessed_player.score += 1
                 if guessed_player == self.correct_player:
                     self.current_guesser.score += 1
