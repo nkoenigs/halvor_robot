@@ -66,7 +66,7 @@ class Main_Commands(commands.Cog):
         await self.play_audio_clip(ctx, 'audio/NiceMeme.mp3')
 
     @commands.command(name = 'thebest', help = 'mazda miata')
-    async def nice_meme(self, ctx):
+    async def the_best(self, ctx):
         await self.play_audio_clip(ctx, 'audio/the_best.mp3')
 
     # play issacs im a little fat girl
