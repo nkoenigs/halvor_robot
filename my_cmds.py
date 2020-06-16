@@ -68,7 +68,7 @@ class Main_Commands(commands.Cog):
     async def small_yeet(self, ctx):
         await self.play_audio_clip(ctx, 'audio/yeet(1).mp3')
 
-    @commands.command(name = 'Yeet', help = 'Yeet')
+    @commands.command(name = 'yeeet', help = 'Yeet (sorry koda)')
     async def big_yeet(self, ctx):
         await self.play_audio_clip(ctx, 'audio/yeet.mp3')
         
