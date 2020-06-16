@@ -64,7 +64,7 @@ class Main_Commands(commands.Cog):
     async def the_best(self, ctx):
         await self.play_audio_clip(ctx, 'audio/the_best.mp3')
 
-    @commands.command(name = 'yeet ', help = 'yeet')
+    @commands.command(name = 'yeet', help = 'yeet')
     async def small_yeet(self, ctx):
         await self.play_audio_clip(ctx, 'audio/yyy.mp3')
 
