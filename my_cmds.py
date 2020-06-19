@@ -71,6 +71,10 @@ class Main_Commands(commands.Cog):
     @commands.command(name = 'yeeet', help = 'Yeet (sorry koda)')
     async def big_yeet(self, ctx):
         await self.play_audio_clip(ctx, 'audio/yeet.mp3')
+
+    @commands.command(name = 'road', help = 'frankly idk either')
+    async def zac_suxs(self, ctx):
+        await self.play_audio_clip(ctx, 'audio/rood.mp3')
         
     @commands.command(name = 'gough', help = 'very good')
     async def darksoul(self, ctx):
