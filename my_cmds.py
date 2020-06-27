@@ -84,6 +84,10 @@ class Main_Commands(commands.Cog):
     async def darksoul(self, ctx):
         await self.play_audio_clip(ctx, 'audio/very-good_2.mp3')    
 
+    @commands.command(name = 'tt', help = 'WALK SLOWLY')
+    async def notapart(self, ctx):
+        await self.play_audio_clip(ctx, 'audio/turbo_team.mp3')    
+
     # play issacs im a little fat girl
     @commands.command(name = 'shame', help = 'play ignohrs classic line')
     async def ignhor_shame(self, ctx):
