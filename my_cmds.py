@@ -48,6 +48,10 @@ class Main_Commands(commands.Cog):
     async def loud_bwaaa(self, ctx):
         await self.play_audio_clip(ctx, 'audio/bwaaaaaa.mp3')
 
+    @commands.command(name = 'abort', help = 'idk why john wanted this')
+    async def abort(self, ctx):
+        await self.play_audio_clip(ctx, 'audio/abort.mp3')
+
     @commands.command(name = 'get_out', help = 'purge normies from the call')
     async def normies_get_out(self, ctx):
         await self.play_audio_clip(ctx, 'audio/normie.mp3')
