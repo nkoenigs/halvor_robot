@@ -86,7 +86,19 @@ class Main_Commands(commands.Cog):
 
     @commands.command(name = 'tt', help = 'WALK SLOWLY')
     async def notapart(self, ctx):
-        await self.play_audio_clip(ctx, 'audio/turbo_team.mp3')    
+        await self.play_audio_clip(ctx, 'audio/turbo_team.mp3')
+
+    @commands.command(name = 'flip', help = 'u have 2 do it')
+    async def mother_in_law(self, ctx):
+        await self.play_audio_clip(ctx, 'audio/mother_in_law.mp3')    
+
+    @commands.command(name = 'bully', help = 'stop bullying me')
+    async def bullying(self, ctx):
+        await self.play_audio_clip(ctx, 'audio/bullying.mp3')    
+
+    @commands.command(name = 'neo', help = 'i am the engineer')
+    async def we_have_done_it(self, ctx):
+        await self.play_audio_clip(ctx, 'audio/we_have_done_it.mp3')    
 
     # play issacs im a little fat girl
     @commands.command(name = 'shame', help = 'play ignohrs classic line')
