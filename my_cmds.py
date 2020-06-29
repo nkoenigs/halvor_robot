@@ -19,6 +19,7 @@ class Main_Commands(commands.Cog):
             await ctx.send(f'{ctx.author}, you need to be in a voice channel for me to play a clip')
         else:
             vc = await tar.connect()
+            print('trying to play clip: ' + str(clip))
             try:
                 vc.play(discord.FFmpegPCMAudio(clip))
             except Exception as inst:
@@ -39,6 +40,11 @@ class Main_Commands(commands.Cog):
     @commands.command(name = 'bae', help = 'play a relatable clip from i think you should leave')
     async def wet_wet_mud(self, ctx):
         await self.play_audio_clip(ctx, 'audio/wetwetmud.mp3')
+
+    @commands.command(name = 'broom', help = 'ultimate bruh')
+    async def wet_wet_mud(self, ctx):
+        await self.play_audio_clip(ctx, 'audio/Broom.mp3')
+
 
     @commands.command(name = 's_ayayaya', help = 'play a clip of ayayaya')
     async def samantha_ayaya(self, ctx):
