@@ -9,15 +9,15 @@ from dotenv import load_dotenv
 from logging.handlers import RotatingFileHandler
 
 # Create a logger
-logger = logging.getLogger(__name__)
-logger.setLevel(logging.DEBUG)
+LOG = logging.getLogger('discord')
+LOG.setLevel(logging.DEBUG)
 
 # Create a rotating file handler
 file_handler = RotatingFileHandler('bot.log', maxBytes=5*1024*1024, backupCount=3)
-file_handler.setLevel(logging.INFO)  
+file_handler.setLevel(logging.DEBUG)  
 
 # Create a stream handler for logging to the console
-stream_handler = logging.StreamHandler(sys.stdout)
+stream_handler = logging.StreamHandler(stream=sys.stdout)
 stream_handler.setLevel(logging.INFO) 
 
 # Format logs
@@ -26,8 +26,9 @@ file_handler.setFormatter(formatter)
 stream_handler.setFormatter(formatter)
 
 # Add the handlers to the logger
-logger.addHandler(file_handler)
-logger.addHandler(stream_handler)
+LOG.addHandler(stream_handler)
+LOG.addHandler(file_handler)
+LOG.info("logger online")
 
 description = 'Halvor Persson (born 11 March 1966) is a Norwegian former ski jumper.'
 
@@ -43,7 +44,7 @@ async def load_cogs():
 
 @bot.event
 async def on_ready():
-    log.info(bot.user + ' has connected to Discord!')
+    LOG.info(f'{bot.user} has connected to Discord!')
     
 async def main():
     async with bot:

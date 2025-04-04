@@ -6,7 +6,8 @@ from dataclasses import dataclass, field
 from typing import List, Optional
 from discord.ext import commands
 
-log = logging.getLogger(__name__)
+LOG = logging.getLogger('discord')
+LOG.info("logger online wiki")
 
 class Gamestate(Enum):
     """
@@ -46,7 +47,7 @@ class WikipediaGame(commands.Cog):
         Args:
             ctx (commands.Context): The context of the command invocation
         """
-        log.info(f"Setup game command {_strfy_ctx(ctx)}")
+        LOG.info(f"Setup game command {_strfy_ctx(ctx)}")
 
         # Check if the message is already in a thread
         if isinstance(ctx.channel, discord.Thread):
@@ -67,7 +68,7 @@ class WikipediaGame(commands.Cog):
         """
         Starts the game with the current players. deal out articles to everyone in dms. joins call to set a timer on reading articles.
         """
-        log.info(f"Start game command {_strfy_ctx(ctx)}")
+        LOG.info(f"Start game command {_strfy_ctx(ctx)}")
 
         # get the game
         game = self._get_game(ctx)
@@ -117,7 +118,7 @@ class WikipediaGame(commands.Cog):
         valid_games = [game for game in self.games if ctx.channel == game.thread]
         if len(valid_games) == 1:
             return valid_games[0]
-        log.info(f"Found {len(valid_games)} valid games with command {_strfy_ctx(ctx)}")
+        LOG.info(f"Found {len(valid_games)} valid games with command {_strfy_ctx(ctx)}")
         return None
             
 
