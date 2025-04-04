@@ -1,9 +1,13 @@
 import discord 
 import logging
+import random
+import requests
+import asyncio
 
 from enum import Enum
+from utils import catch_exception
 from dataclasses import dataclass, field
-from typing import List, Optional
+from typing import Dict, List, Optional, Generator
 from discord.ext import commands
 
 LOG = logging.getLogger('discord')
@@ -28,17 +32,33 @@ class WikipediaGame(commands.Cog):
         self.games = []
 
     @dataclass
-    class SingleGame():
+    class SingleWiki:
+        title: str
+        player: Optional["discord.User"]
+        guesser: Optional["discord.User"] = None
+        guessed: Optional["discord.User"] = None
+
+    @dataclass
+    class SingleGame:
         """
         Dataclass for the details of any single game
         """
+        wikis_per_player: int
+        options_per_player: int
+        sec_to_read: int
         state: Gamestate = Gamestate.ADD_PLAYERS
         thread: discord.threads.Thread=None
         join_msg: discord.message.MessageReference=None
         players: List["discord.User"]=field(default_factory=list)
+        wikis: List["WikipediaGame.SingleWiki"]=field(default_factory=list)
+        index: int=0
 
-    @commands.command(name='new_game', help='starts a new wiki game')
-    async def setup_game(self, ctx):
+    
+    @commands.command(name='new_game', help='starts a new wiki game. Optional: call as >new_game '
+                      '$1 $2 $3 to set the number of selected wikis per player, the total number '
+                      'of wikis to show each player, and the seconds to read up')
+    async def setup_game(self, ctx, wikis_per_player: int=1, options_per_player: int=3, 
+                         seconds_to_read: int=10):
         """
         Creates a new wiki game in a thread.
         Opens the game with a message that users can react to to join as players.
@@ -46,6 +66,9 @@ class WikipediaGame(commands.Cog):
 
         Args:
             ctx (commands.Context): The context of the command invocation
+            wikis_per_player (int): number of selected wikis per player
+            options_per_player (int): number of optional wikis to show each player
+            seconds_to_read (int): number of seconds to read the wikis
         """
         LOG.info(f"Setup game command {_strfy_ctx(ctx)}")
 
@@ -55,8 +78,13 @@ class WikipediaGame(commands.Cog):
                            "as a nested thread.")
             return
         
+        # check for valid args
+        if wikis_per_player < 1 or wikis_per_player > options_per_player:
+            await ctx.send("Invalid number of wikis and options given in command")
+            return
+        
         # Setup Game
-        game = WikipediaGame.SingleGame()
+        game = WikipediaGame.SingleGame(wikis_per_player, options_per_player, seconds_to_read)
         self.games.append(game)
         game.thread = await ctx.message.create_thread(name="Wikipedia Game")
         game.join_msg = await game.thread.send("React to this message to join the wiki game!")
@@ -79,30 +107,105 @@ class WikipediaGame(commands.Cog):
         
         # check the game state
         if game.state != Gamestate.ADD_PLAYERS:
-            await ctx.send("This game has allready started")
+            await ctx.send("This game has already started")
             return
         game.state = Gamestate.READ_WIKI
 
-        # get the list of players
-        for reaction in game.join_msg.reactions:
-            game.players = await reaction.users().flatten()
-        game.players = list(set(game.players))
-        game.players.remove(self.bot.user)
-        await ctx.send(game.players)
+        # # get the list of players
+        game.players = await self._get_reactors(ctx.channel, game.join_msg)
 
+        # get wiki articles
+        try:
+            all_wikis = self._get_random_wikipedia_pages(game.options_per_player*len(game.players))
+        except requests.exceptions.RequestException as e:
+            LOG.error("Issue reaching wiki API from " + str(e))
+            await ctx.send("Error reaching wiki API")
+            return
         
+        # send players their wikis
+        await ctx.send("Sending out wikis!")
+        wiki_iterator = iter(all_wikis.items())
+        player_offers = {}
+        for player in game.players:
+            await player.send(
+                f"Welcome to the wiki game! Here are your options for subjects to become the expert"
+                f" on. React to the ones you are okay playing with. {game.wikis_per_player} will "
+                f"be selected at the end of {game.sec_to_read} seconds.")
+            player_offers[player] = []
+            for i in range(0, game.options_per_player):
+                title, url = next(wiki_iterator)
+                msg = await player.send(url)
+                await msg.add_reaction("✅")
+                player_offers[player].append((title, msg))
 
+            LOG.info(player_offers)
+
+        # wait for read time
+        LOG.info(f"waiting for {game.sec_to_read} seconds")
+        await asyncio.sleep(game.sec_to_read)
+
+        # select all articles for hat
+        for player in game.players:
+            accepted = []
+            rejected = []
+            selected = []
+            await player.send("Times up!")
+
+            # check reactions on each offered wiki
+            for (offer_title, offer_msg) in player_offers[player]:
+                reactors = await self._get_reactors(player.dm_channel, offer_msg)
+                if len(list(set(reactors))):
+                    accepted.append(offer_title)
+                else:
+                    rejected.append(offer_title)
+
+            # select wikis for game
+            while len(selected) < game.wikis_per_player:
+                if accepted:
+                    selected.append(WikipediaGame.SingleWiki(
+                        accepted.pop(random.randrange(len(accepted))), player))
+                else:
+                    selected.append(WikipediaGame.SingleWiki(
+                        rejected.pop(random.randrange(len(rejected))), player))
+                game.wikis.extend(selected)
+            LOG.info(f"Player {player.name} selected {selected}")
+
+        # shuffle wikis
+        guesser_list = game.players * game.wikis_per_player  
+        for _ in range(1000):  # Try 1000 times to ensure no guesser is paired with their player
+            random.shuffle(guesser_list)
+            random.shuffle(game.wikis)
+            guess_iter = iter(guesser_list)
+            valid_pairs = True
+            for wiki in game.wikis:
+                wiki.guesser = next(guess_iter)
+                if wiki.guesser == wiki.player:
+                    valid_pairs = False
+                    break
+            if valid_pairs:
+                break
+        else:
+            await ctx.send("Something went wrong, couldn't pair guessers correctly.")
+            return
+        await ctx.send("Game is ready! Draw a subject.")
+        game.state = Gamestate.BETWEEN_ROUNDS
+            
+    @commands.command(name='draw', help='play a round of the game')
     def play_round():
         """
         deal out one article from the hat and declare who is judge for the round
         """
         pass
 
-    def end_game_early():
-        """
-        ends the game early
-        """
+    def end_round():
         pass
+
+    async def _get_reactors(self, channel, msg):
+        updated_msg = await channel.fetch_message(msg.id)
+        reactions = []
+        for reaction in updated_msg.reactions:
+            reactions.extend([user async for user in reaction.users() if user != self.bot.user])
+        return list(set(reactions))
 
     def _get_game(self, ctx) -> Optional["SingleGame"]:
         """
@@ -120,14 +223,39 @@ class WikipediaGame(commands.Cog):
             return valid_games[0]
         LOG.info(f"Found {len(valid_games)} valid games with command {_strfy_ctx(ctx)}")
         return None
-            
 
-    @commands.command(name="debug") # TODO remove
-    async def debug(self, ctx):
-        # Triggering pdb (Python Debugger)
-        await ctx.send("Opening debugger...")
-        import pdb
-        pdb.set_trace()  # This will start the debugger in the console
+    def _get_random_wikipedia_pages(self, number_of_pages) -> dict[str, str]:
+        """
+        Fetches random English Wikipedia page titles and URLs.
+
+        Args:
+            number_of_pages (int): Number of random pages to fetch (max 500 for bots, 10 for users).
+
+        Returns:
+            title and url for each page.
+        """
+        endpoint = "https://en.wikipedia.org/w/api.php"
+        collected = {}
+        batch_size = min(10, number_of_pages)  # Max 10 for anonymous users per request
+
+        while len(collected) < number_of_pages:
+            params = {
+                "action": "query",
+                "format": "json",
+                "list": "random",
+                "rnnamespace": 0,
+                "rnlimit": min(batch_size, number_of_pages - len(collected))
+            }
+
+            response = requests.get(endpoint, params=params)
+            response.raise_for_status()
+            data = response.json()
+
+            for page in data["query"]["random"]:
+                title = page["title"]
+                collected[title] = f"https://en.wikipedia.org/wiki/{title.replace(' ', '_')}"
+
+        return collected
 
 def _strfy_ctx(ctx) -> str:
     """
@@ -137,6 +265,7 @@ def _strfy_ctx(ctx) -> str:
         ctx (commands.Context): The context of the command invocation
     """
     return f" from user {ctx.author.name} with ID {ctx.message.id}"
+
 
 async def setup(bot):
     """
