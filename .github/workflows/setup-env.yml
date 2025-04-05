@@ -1,4 +1,4 @@
-name: Setup .env and Build Docker
+name: Setup .env
 
 on:
   push:
