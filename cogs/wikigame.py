@@ -34,9 +34,9 @@ class WikipediaGame(commands.Cog):
     @dataclass
     class SingleWiki:
         title: str
-        player: Optional["discord.User"]
-        guesser: Optional["discord.User"] = None
-        guessed: Optional["discord.User"] = None
+        expert: Optional["discord.User"]
+        researcher: Optional["discord.User"] = None
+        claimed_expert: Optional["discord.User"] = None
 
     @dataclass
     class SingleGame:
@@ -58,7 +58,7 @@ class WikipediaGame(commands.Cog):
                       '$1 $2 $3 to set the number of selected wikis per player, the total number '
                       'of wikis to show each player, and the seconds to read up')
     async def setup_game(self, ctx, wikis_per_player: int=1, options_per_player: int=3, 
-                         seconds_to_read: int=10):
+                         seconds_to_read: int=10): #TODO fix default time
         """
         Creates a new wiki game in a thread.
         Opens the game with a message that users can react to to join as players.
@@ -94,7 +94,12 @@ class WikipediaGame(commands.Cog):
                       'thread after all players have reacted to the new game')
     async def start_game(self, ctx):
         """
-        Starts the game with the current players. deal out articles to everyone in dms. joins call to set a timer on reading articles.
+        Starts the game with the current players. 
+        Deal out articles to everyone in dms. 
+        Shuffles the hat and assigns guessers.
+
+        Args:
+            ctx (commands.Context): The context of the command invocation
         """
         LOG.info(f"Start game command {_strfy_ctx(ctx)}")
 
@@ -178,8 +183,8 @@ class WikipediaGame(commands.Cog):
             guess_iter = iter(guesser_list)
             valid_pairs = True
             for wiki in game.wikis:
-                wiki.guesser = next(guess_iter)
-                if wiki.guesser == wiki.player:
+                wiki.researcher = next(guess_iter)
+                if wiki.researcher == wiki.expert:
                     valid_pairs = False
                     break
             if valid_pairs:
@@ -191,16 +196,78 @@ class WikipediaGame(commands.Cog):
         game.state = Gamestate.BETWEEN_ROUNDS
             
     @commands.command(name='draw', help='play a round of the game')
-    def play_round():
+    async def play_round(self, ctx):
         """
         deal out one article from the hat and declare who is judge for the round
         """
-        pass
+        game = self._get_game(ctx)
+        if game is None:
+            await ctx.send("A single valid game could not be found for this thread. Consider "
+                           "deleting it and starting a new game.")
+            return
+        if game.state != Gamestate.BETWEEN_ROUNDS:
+            await ctx.send("Now is not the time to draw for this game")
+            return
+        game.state = Gamestate.LIVE_ROUND
+        await ctx.send(f"For this round the reasercher will be {game.wikis[game.index].researcher} and"
+                       f" topic will be {game.wikis[game.index].title}. Good luck identifying the "
+                       "expert in the room!")
 
-    def end_round():
-        pass
+    @commands.command(name='expert_is', help='for entering the the reaserchers selction for the expert')
+    async def end_round(self, ctx, expert: Optional['discord.User']=None):
+        # get game
+        game = self._get_game(ctx)
+        if game is None:
+            await ctx.send("A single valid game could not be found for this thread. Consider "
+                           "deleting it and starting a new game.")
+            return
 
-    async def _get_reactors(self, channel, msg):
+        # insure valid input
+        if ctx.author != game.wikis[game.index].researcher:
+            await ctx.send("This user is not the reasercher")
+            return
+        if expert is None:
+            await ctx.send("Given expert is not a discord user")
+            return
+        if expert == game.wikis[game.index].researcher or expert not in game.players:
+            await ctx.send("Given expert is not a valid guess")
+            return
+        
+        #update with selected expoert
+        game.wikis[game.index].claimed_expert = expert
+        game.index += 1
+        if game.index <= len(game.wikis):
+            game.state = Gamestate.BETWEEN_ROUNDS
+            await ctx.send("Selection recorded! Draw when ready.")
+            return
+        
+        # game over! score and report
+        game.state = Gamestate.ENDGAME
+        result_str = "GAME OVER. The true experts where:\ntitle  -- expert -- result\n"
+        scores = {player: 0 for player in game.players}
+        for wiki in game.wikis:
+            result = wiki.expert == wiki.claimed_expert
+            result_str += f"{wiki.title} -- {wiki.expert} -- {_emojyfy(result)}\n"
+            if result:
+                scores[wiki.researcher] += 1
+            scores[wiki.claimed_expert] += 1
+        result_str += "SCORES:\n"
+        for player, score in dict(sorted(scores.items(), key=lambda item: item[1], reverse=True)):
+            result_str += f"{player}: {score}\n"
+        result_str += "Thanks for playing!"
+        await ctx.send(result_str)
+
+    async def _get_reactors(self, channel, msg) -> List["discord.User"]:
+        """
+        Get the list of unique users to react to a message excluding this bot
+
+        Args:
+            channel (discord.Channel): channel to find the message in
+            msg (discord.Message): message to get reactions from
+
+        Returns:
+            list of users who reacted to the message
+        """
         updated_msg = await channel.fetch_message(msg.id)
         reactions = []
         for reaction in updated_msg.reactions:
@@ -266,6 +333,16 @@ def _strfy_ctx(ctx) -> str:
     """
     return f" from user {ctx.author.name} with ID {ctx.message.id}"
 
+def _emojyfy(bool) -> str:
+    """
+    Helper to turn a bool into a good or bad emoji
+
+    Args:
+        bool (bool): given bool
+
+    Returns ✅ or ❌
+    """
+    return "✅" if bool else "❌"
 
 async def setup(bot):
     """
