@@ -33,4 +33,4 @@ jobs:
           context: .
           file: ./Dockerfile  # Specify your Dockerfile location
           push: true          # Push to Docker Hub after building
-          tags: ${{ secrets.DOCKER_USERNAME }}/halvor-robot:latest
+          tags: ${{ secrets.DOCKER_USERNAME }}/your-repository-name:latest
