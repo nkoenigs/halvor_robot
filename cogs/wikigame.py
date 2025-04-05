@@ -58,7 +58,7 @@ class WikipediaGame(commands.Cog):
                       '$1 $2 $3 to set the number of selected wikis per player, the total number '
                       'of wikis to show each player, and the seconds to read up')
     async def setup_game(self, ctx, wikis_per_player: int=1, options_per_player: int=3, 
-                         seconds_to_read: int=10): #TODO fix default time
+                         seconds_to_read: int=120):
         """
         Creates a new wiki game in a thread.
         Opens the game with a message that users can react to to join as players.
@@ -90,7 +90,7 @@ class WikipediaGame(commands.Cog):
         game.join_msg = await game.thread.send("React to this message to join the wiki game!")
         await game.join_msg.add_reaction("👍")
 
-    @commands.command(name='start_game', help='starts the game. Only call this in a wiki game '
+    @commands.command(name='deal', help='starts the game. Only call this in a wiki game '
                       'thread after all players have reacted to the new game')
     async def start_game(self, ctx):
         """
@@ -236,7 +236,7 @@ class WikipediaGame(commands.Cog):
         #update with selected expoert
         game.wikis[game.index].claimed_expert = expert
         game.index += 1
-        if game.index <= len(game.wikis):
+        if game.index < len(game.wikis):
             game.state = Gamestate.BETWEEN_ROUNDS
             await ctx.send("Selection recorded! Draw when ready.")
             return
@@ -252,7 +252,7 @@ class WikipediaGame(commands.Cog):
                 scores[wiki.researcher] += 1
             scores[wiki.claimed_expert] += 1
         result_str += "SCORES:\n"
-        for player, score in dict(sorted(scores.items(), key=lambda item: item[1], reverse=True)):
+        for player, score in sorted(scores.items(), key=lambda item: item[1], reverse=True):
             result_str += f"{player}: {score}\n"
         result_str += "Thanks for playing!"
         await ctx.send(result_str)
