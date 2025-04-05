@@ -91,7 +91,7 @@ class WikipediaGame(commands.Cog):
         await game.join_msg.add_reaction("👍")
 
     @commands.command(name='deal', help='starts the game. Only call this in a wiki game '
-                      'thread after all players have reacted to the new game')
+                      'thread after all players have reacted to the new game.')
     async def start_game(self, ctx):
         """
         Starts the game with the current players. 
@@ -198,7 +198,10 @@ class WikipediaGame(commands.Cog):
     @commands.command(name='draw', help='play a round of the game')
     async def play_round(self, ctx):
         """
-        deal out one article from the hat and declare who is judge for the round
+        Deal out one article for the game. Selects a researcher to guess
+
+        Args:
+            ctx (commands.Context): The context of the command invocation
         """
         game = self._get_game(ctx)
         if game is None:
@@ -215,6 +218,13 @@ class WikipediaGame(commands.Cog):
 
     @commands.command(name='expert_is', help='for entering the the reaserchers selction for the expert')
     async def end_round(self, ctx, expert: Optional['discord.User']=None):
+        """
+        Inputs a users guess for the round
+
+        Args:
+            ctx (commands.Context): The context of the command invocation
+            expert (discord.User): guess for the round
+        """
         # get game
         game = self._get_game(ctx)
         if game is None:
