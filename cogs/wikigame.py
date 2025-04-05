@@ -203,11 +203,15 @@ class WikipediaGame(commands.Cog):
         Args:
             ctx (commands.Context): The context of the command invocation
         """
+        LOG.info(f"Start round command {_strfy_ctx(ctx)}")
+
+        # get the game
         game = self._get_game(ctx)
         if game is None:
             await ctx.send("A single valid game could not be found for this thread. Consider "
                            "deleting it and starting a new game.")
             return
+        # send reply
         if game.state != Gamestate.BETWEEN_ROUNDS:
             await ctx.send("Now is not the time to draw for this game")
             return
@@ -225,6 +229,8 @@ class WikipediaGame(commands.Cog):
             ctx (commands.Context): The context of the command invocation
             expert (discord.User): guess for the round
         """
+        LOG.info(f"End round command {_strfy_ctx(ctx)}")
+                 
         # get game
         game = self._get_game(ctx)
         if game is None:
