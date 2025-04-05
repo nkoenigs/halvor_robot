@@ -275,7 +275,7 @@ class WikipediaGame(commands.Cog):
 
     async def _get_reactors(self, channel, msg) -> List["discord.User"]:
         """
-        Get the list of unique users to react to a message excluding this bot.
+        Get the list of unique users to react to a message excluding this bot
 
         Args:
             channel (discord.Channel): channel to find the message in
@@ -292,8 +292,8 @@ class WikipediaGame(commands.Cog):
 
     def _get_game(self, ctx) -> Optional["SingleGame"]:
         """
-        Gets the current game based on the thread this commands context is from.
-        Replys to the user and returns None if context has no single matching thread.
+        Gets the current game based on the thread this commands context is from
+        Replys to the user and returns None if context has no single matching thread
 
         Args:
             ctx (commands.Context): The context of the command invocation
