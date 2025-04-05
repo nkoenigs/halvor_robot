@@ -275,7 +275,7 @@ class WikipediaGame(commands.Cog):
 
     async def _get_reactors(self, channel, msg) -> List["discord.User"]:
         """
-        Get the list of unique users to react to a message excluding this bot
+        Get the list of unique users to react to a message excluding this bot.
 
         Args:
             channel (discord.Channel): channel to find the message in
